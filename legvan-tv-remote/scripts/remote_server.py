@@ -166,7 +166,7 @@ def tools_push():
     f.save(tmp_path)
     with _lock:
         try:
-            get_tv().push_file(tmp_path, f"/sdcard/Download/{f.filename}")
+            get_tv().push_file(tmp_path, f"/storage/emulated/0/Download/{f.filename}")
             os.remove(tmp_path)
             return jsonify({'ok': True, 'msg': f"Pushed to Downloads"})
         except Exception as e:
