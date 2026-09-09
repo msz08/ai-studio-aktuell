@@ -618,17 +618,23 @@ button:active { transform: scale(0.91) !important; }
 <div class="text-modal" id="tools-modal" onclick="onToolsBgClick(event)">
   <div class="text-card" style="width: 320px;">
     <div class="text-card-title">🛠 TV Tools</div>
-    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-      <button class="text-send" onclick="document.getElementById('apk-upload').click()" style="background: #34c759;">Install APK</button>
+    <div class="tools-grid" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+      <button class="text-send" onclick="document.getElementById('apk-upload').click()" style="padding: 10px; background: #2196F3; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+        📦 Install APK</button>
       <input type="file" id="apk-upload" accept=".apk" style="display: none;" onchange="uploadFile(this, '/api/tools/install')">
       
-      <button class="text-send" onclick="document.getElementById('file-upload').click()" style="background: #007aff;">Push File to Downloads</button>
+      <button class="text-send" onclick="document.getElementById('file-upload').click()" style="padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+        📁 Send to Downloads</button>
       <input type="file" id="file-upload" style="display: none;" onchange="uploadFile(this, '/api/tools/push')">
       
-      <button class="text-send" onclick="toolsAction('screenshot')" style="background: #ff9800;">Take Screenshot</button>
-      <button class="text-send" onclick="toolsAction('storage')" style="background: #6c757d;">Check Storage</button>
-      <button class="text-send" onclick="toolsAction('clearcache')" style="background: #dc3545;">Clear Background Apps</button>
-      <button class="text-send" onclick="toolsAction('reboot')" style="background: #1c1c1e; border: 1px solid #333;">Reboot TV</button>
+      <button class="text-send" onclick="toolsAction('screenshot')" style="padding: 10px; background: #9c27b0; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+        📸 Screenshot</button>
+      <button class="text-send" onclick="toolsAction('storage')" style="padding: 10px; background: #607d8b; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+        💾 Check Storage</button>
+      <button class="text-send" onclick="toolsAction('clearcache')" style="padding: 10px; background: #ff9800; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+        🧹 Clear Cache</button>
+      <button class="text-send" onclick="toolsAction('reboot')" style="padding: 10px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+        🔄 Reboot TV</button>
     </div>
     <div class="text-hint" style="margin-top: 15px;">Tap outside to close</div>
   </div>
