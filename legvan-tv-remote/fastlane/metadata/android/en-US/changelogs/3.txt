@@ -1,1 +1,0 @@
-v1.2: Build fix — switched to JDK 21 toolchain for compatibility with F-Droid build server.
