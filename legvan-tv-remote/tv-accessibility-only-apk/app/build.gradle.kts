@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    // org.jetbrains.kotlin.android is applied automatically by AGP 9.x (builtInKotlin=true)
 }
 android {
     namespace = "com.porter.tvremote"
