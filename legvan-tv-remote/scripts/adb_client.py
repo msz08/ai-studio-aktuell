@@ -176,3 +176,56 @@ class TVClient:
 
     def __exit__(self, *_):
         self.close()
+
+    def push_file(self, local_path: str, remote_path: str) -> None:
+        self._device.push(local_path, remote_path)
+
+    def install_apk(self, local_path: str) -> str:
+        import time
+        remote_tmp = f"/data/local/tmp/temp_install_{int(time.time())}.apk"
+        self._device.push(local_path, remote_tmp)
+        res = self.shell(f"pm install -r {remote_tmp}")
+        self.shell(f"rm {remote_tmp}")
+        return res
+
+    def take_screenshot(self) -> bytes:
+        import tempfile, os
+        remote_tmp = "/data/local/tmp/screencap.png"
+        self.shell(f"screencap -p {remote_tmp}")
+        fd, local_path = tempfile.mkstemp(suffix=".png")
+        os.close(fd)
+        try:
+            self._device.pull(remote_tmp, local_path)
+            self.shell(f"rm {remote_tmp}")
+            with open(local_path, "rb") as f:
+                return f.read()
+        finally:
+            if os.path.exists(local_path):
+                os.remove(local_path)
+
+    def reboot(self) -> None:
+        self.shell("reboot")
+
+    def get_storage(self) -> str:
+        res = self.shell("df -h /data")
+        lines = res.strip().splitlines()
+        if len(lines) > 1:
+            parts = lines[1].split()
+            if len(parts) >= 4:
+                return f"Free: {parts[3]} / Total: {parts[1]}"
+        return "Unknown"
+
+    def clear_cache(self) -> str:
+        self.shell("am kill-all")
+        return "Background apps cleared"
+
+    def get_installed_apps(self) -> list:
+        res = self.shell("pm list packages -3")
+        pkgs = set(line.replace("package:", "").strip() for line in res.splitlines() if line.startswith("package:"))
+        common = ["com.google.android.youtube.tv", "com.netflix.ninja", "com.amazon.amazonvideo.livingroom", "com.disney.disneyplus", "org.xbmc.kodi", "com.spotify.tv.android", "com.tcl.initsetup"]
+        res_sys = self.shell("pm list packages -s")
+        sys_pkgs = set(line.replace("package:", "").strip() for line in res.splitlines() if line.startswith("package:"))
+        for c in common:
+            if c in sys_pkgs:
+                pkgs.add(c)
+        return sorted(list(pkgs))
