@@ -178,13 +178,25 @@ class TVClient:
         self.close()
 
     def push_file(self, local_path: str, remote_path: str) -> None:
-        self._device.push(local_path, remote_path)
+        original_timeout = self._device._transport._default_transport_timeout_s
+        try:
+            self._device._transport._default_transport_timeout_s = 600.0
+            self._device.push(local_path, remote_path)
+        finally:
+            self._device._transport._default_transport_timeout_s = original_timeout
 
     def install_apk(self, local_path: str) -> str:
         import time
         remote_tmp = f"/data/local/tmp/temp_install_{int(time.time())}.apk"
-        self._device.push(local_path, remote_tmp)
-        res = self.shell(f"pm install -r {remote_tmp}")
+        self.push_file(local_path, remote_tmp)
+        
+        original_timeout = self._device._transport._default_transport_timeout_s
+        try:
+            self._device._transport._default_transport_timeout_s = 300.0
+            res = self.shell(f"pm install -r {remote_tmp}")
+        finally:
+            self._device._transport._default_transport_timeout_s = original_timeout
+            
         self.shell(f"rm {remote_tmp}")
         return res
 
